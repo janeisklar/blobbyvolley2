@@ -1,0 +1,24 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: windows-latest
+
+steps:
+- script: .\vcpkg\bootstrap-vcpkg.bat
+  displayName: Bootstrap vcpkg
+- script: .\vcpkg/vcpkg install sdl2 boost physfs
+  displayName: 'Install prerequisites'
+- task: CMake@1
+  inputs:
+    cmakeArgs: '-A x64 -DCMAKE_TOOLCHAIN_FILE=../vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_SYSTEM_NAME=WindowsStore -DCMAKE_SYSTEM_VERSION=10.0 ..'
+- task: MSBuild@1
+  inputs:
+    solution: 'build/ALL_BUILD.vcxproj'
+    maximumCpuCount: true
+    platform: 'x64'
