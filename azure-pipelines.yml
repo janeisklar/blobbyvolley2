@@ -20,5 +20,4 @@ steps:
 - task: MSBuild@1
   inputs:
     solution: 'build/ALL_BUILD.vcxproj'
-    maximumCpuCount: true
     platform: 'x64'
